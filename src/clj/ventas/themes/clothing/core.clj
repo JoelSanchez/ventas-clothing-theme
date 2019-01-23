@@ -6,17 +6,16 @@
    entities for you, they tend to be not `real world enough` for development)"
   (:require
    [clojure.spec.alpha :as spec]
+   [clojure.string :as str]
+   [ventas.database.entity :as entity]
    [ventas.database.generators :as generators]
    [ventas.entities.i18n :as entities.i18n]
    [ventas.i18n :as i18n :refer [i18n]]
-   [ventas.seo :as seo]
-   [ventas.theme :as theme]
-   [ventas.themes.clothing.demo :as demo]
-   [ventas.utils :as utils]
    [ventas.plugins.menu.core :as menu]
    [ventas.search.entities :as search.entities]
-   [ventas.database.entity :as entity]
-   [clojure.string :as str]))
+   [ventas.theme :as theme]
+   [ventas.themes.clothing.api]
+   [ventas.utils :as utils]))
 
 (spec/def :product.term/color ::generators/string)
 
@@ -60,19 +59,8 @@
 (theme/register!
  :clothing
  {:name "Clothing"
+  :init-script "ventas.themes.clothing.core.start();"
   :build {:modules {:main {:entries ['ventas.themes.clothing.core]}}}
-  :prerendered-routes
-  (fn []
-    (utils/into-n
-     [[:frontend]
-      [:frontend.privacy-policy]
-      [:frontend.login]]
-     (->> (seo/type->slugs :schema.type/category)
-          (map (fn [{:keys [slug-value]}]
-                 [:frontend.category :id slug-value])))
-     (->> (seo/type->slugs :schema.type/product)
-          (map (fn [{:keys [slug-value]}]
-                 [:frontend.product :id slug-value])))))
   :fixtures
   (fn []
     (utils/into-n
@@ -163,13 +151,12 @@
       {:schema/type :schema.type/product.taxonomy
        :product.taxonomy/name (entities.i18n/get-i18n-entity {:en_US "Lace type"
                                                               :es_ES "Tipo de cordones"})
-       :product.taxonomy/keyword :lace-type}]
-
-     (demo/demo-data)))
+       :product.taxonomy/keyword :lace-type}]))
 
   :migrations
-  [;; Extends the default terms with colors, which is something that
-   ;; other themes may not care about (think of a seafood store)
-   [{:db/ident :product.term/color
-     :db/valueType :db.type/string
-     :db/cardinality :db.cardinality/one}]]})
+  [[:base
+    ;; Extends the default terms with colors, which is something that
+    ;; other themes may not care about (think of a seafood store)
+    [{:db/ident :product.term/color
+      :db/valueType :db.type/string
+      :db/cardinality :db.cardinality/one}]]]})

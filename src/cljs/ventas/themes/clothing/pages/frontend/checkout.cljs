@@ -9,8 +9,6 @@
    [ventas.events :as events]
    [ventas.events.backend :as backend]
    [ventas.i18n :refer [i18n]]
-   [ventas.plugins.stripe.core]
-   [ventas.plugins.wire-transfer.core]
    [ventas.routes :as routes]
    [ventas.session :as session]
    [ventas.themes.clothing.components.address :as theme.address]

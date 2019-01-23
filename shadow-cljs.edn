@@ -1,3 +1,4 @@
-{:source-paths ["dev/cljs" "src/cljs" "src/cljc" "src/clj" "test/cljs" "test/cljc"]
+{:source-paths ["dev/cljs" "src/cljs" "src/clj" "test/cljs"]
  :nrepl {:port 4002
-         :init-ns repl}}
+         :init-ns repl}
+ :dependencies [[ventas-core "0.0.12-SNAPSHOT"]]}
