@@ -21,9 +21,11 @@
    :db/valueType :db.type/boolean
    :db/cardinality :db.cardinality/one}])
 
+(spec/def ::featured-entity-type #{:category :product})
+
 (api/register-endpoint!
   ::featured-entities.list
-  {:spec {:entity-type #{:category :product}}}
+  {:spec {:entity-type ::featured-entity-type}}
   (fn [{{:keys [entity-type]} :params} {:keys [session]}]
     (->> (entity/query entity-type {:featured true})
          (map (partial api/serialize-with-session session)))))
