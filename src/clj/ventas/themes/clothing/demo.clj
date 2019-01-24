@@ -3,143 +3,148 @@
   (:require
    [ventas.entities.amount :as entities.amount]
    [ventas.entities.i18n :as entities.i18n]
-   [ventas.utils :as utils]))
+   [ventas.database :as db]
+   [ventas.database.schema :as schema]
+   [datomic.api :as d]
+   [clojure.tools.logging :as log]
+   [ventas.utils :as utils]
+   [ventas.database.entity :as entity]))
 
 (defn product-terms []
   (map #(assoc % :schema/type :schema.type/product.term)
-       [{:product.term/name (entities.i18n/get-i18n-entity {:en_US "Dark green"
-                                                            :es_ES "Verde oscuro"})
+       [{:product.term/name (entities.i18n/->entity {:en_US "Dark green"
+                                                     :es_ES "Verde oscuro"})
          :product.term/keyword :color-dark-green
          :product.term/color "#584838"
          :product.term/taxonomy [:product.taxonomy/keyword :color]}
 
-        {:product.term/name (entities.i18n/get-i18n-entity {:en_US "Dark red"
-                                                            :es_ES "Rojo oscuro"})
+        {:product.term/name (entities.i18n/->entity {:en_US "Dark red"
+                                                     :es_ES "Rojo oscuro"})
          :product.term/keyword :color-dark-red
          :product.term/color "#5f3239"
          :product.term/taxonomy [:product.taxonomy/keyword :color]}
 
-        {:product.term/name (entities.i18n/get-i18n-entity {:en_US "Dark blue"
-                                                            :es_ES "Azul oscuro"})
+        {:product.term/name (entities.i18n/->entity {:en_US "Dark blue"
+                                                     :es_ES "Azul oscuro"})
          :product.term/keyword :color-dark-blue
          :product.term/color "#262b3f"
          :product.term/taxonomy [:product.taxonomy/keyword :color]}
 
-        {:product.term/name (entities.i18n/get-i18n-entity {:en_US "Black"
-                                                            :es_ES "Negro"})
+        {:product.term/name (entities.i18n/->entity {:en_US "Black"
+                                                     :es_ES "Negro"})
          :product.term/keyword :color-black
          :product.term/color "#252525"
          :product.term/taxonomy [:product.taxonomy/keyword :color]}
 
-        {:product.term/name (entities.i18n/get-i18n-entity {:en_US "Green"
-                                                            :es_ES "Verde"})
+        {:product.term/name (entities.i18n/->entity {:en_US "Green"
+                                                     :es_ES "Verde"})
          :product.term/keyword :color-green
          :product.term/color "#3b8c16"
          :product.term/taxonomy [:product.taxonomy/keyword :color]}
 
-        {:product.term/name (entities.i18n/get-i18n-entity {:en_US "Red"
-                                                            :es_ES "Rojo"})
+        {:product.term/name (entities.i18n/->entity {:en_US "Red"
+                                                     :es_ES "Rojo"})
          :product.term/keyword :color-red
          :product.term/color "#c60d0d"
          :product.term/taxonomy [:product.taxonomy/keyword :color]}
 
-        {:product.term/name (entities.i18n/get-i18n-entity {:en_US "Blue"
-                                                            :es_ES "Azul"})
+        {:product.term/name (entities.i18n/->entity {:en_US "Blue"
+                                                     :es_ES "Azul"})
          :product.term/keyword :color-blue
          :product.term/color "#1c43af"
          :product.term/taxonomy [:product.taxonomy/keyword :color]}
 
-        {:product.term/name (entities.i18n/get-i18n-entity {:en_US "Long"
-                                                            :es_ES "Largo"})
+        {:product.term/name (entities.i18n/->entity {:en_US "Long"
+                                                     :es_ES "Largo"})
          :product.term/keyword :length-long
          :product.term/taxonomy [:product.taxonomy/keyword :length]}
 
-        {:product.term/name (entities.i18n/get-i18n-entity {:en_US "Short"
-                                                            :es_ES "Corto"})
+        {:product.term/name (entities.i18n/->entity {:en_US "Short"
+                                                     :es_ES "Corto"})
          :product.term/keyword :length-short
          :product.term/taxonomy [:product.taxonomy/keyword :length]}
 
-        {:product.term/name (entities.i18n/get-i18n-entity {:en_US "38"
-                                                            :es_ES "38"})
+        {:product.term/name (entities.i18n/->entity {:en_US "38"
+                                                     :es_ES "38"})
          :product.term/keyword :shoes-size-38
          :product.term/taxonomy [:product.taxonomy/keyword :shoes-size]}
 
-        {:product.term/name (entities.i18n/get-i18n-entity {:en_US "40"
-                                                            :es_ES "40"})
+        {:product.term/name (entities.i18n/->entity {:en_US "40"
+                                                     :es_ES "40"})
          :product.term/keyword :shoes-size-40
          :product.term/taxonomy [:product.taxonomy/keyword :shoes-size]}
 
-        {:product.term/name (entities.i18n/get-i18n-entity {:en_US "41"
-                                                            :es_ES "41"})
+        {:product.term/name (entities.i18n/->entity {:en_US "41"
+                                                     :es_ES "41"})
          :product.term/keyword :shoes-size-41
          :product.term/taxonomy [:product.taxonomy/keyword :shoes-size]}
 
-        {:product.term/name (entities.i18n/get-i18n-entity {:en_US "None"
-                                                            :es_ES "Ninguno"})
+        {:product.term/name (entities.i18n/->entity {:en_US "None"
+                                                     :es_ES "Ninguno"})
          :product.term/keyword :lace-type-none
          :product.term/taxonomy [:product.taxonomy/keyword :lace-type]}
 
-        {:product.term/name (entities.i18n/get-i18n-entity {:en_US "Regular"
-                                                            :es_ES "Normal"})
+        {:product.term/name (entities.i18n/->entity {:en_US "Regular"
+                                                     :es_ES "Normal"})
          :product.term/keyword :lace-type-regular
          :product.term/taxonomy [:product.taxonomy/keyword :lace-type]}
 
-        {:product.term/name (entities.i18n/get-i18n-entity {:en_US "XS"
-                                                            :es_ES "XS"})
+        {:product.term/name (entities.i18n/->entity {:en_US "XS"
+                                                     :es_ES "XS"})
          :product.term/keyword :size-x-small
          :product.term/taxonomy [:product.taxonomy/keyword :size]}
 
-        {:product.term/name (entities.i18n/get-i18n-entity {:en_US "S"
-                                                            :es_ES "S"})
+        {:product.term/name (entities.i18n/->entity {:en_US "S"
+                                                     :es_ES "S"})
          :product.term/keyword :size-small
          :product.term/taxonomy [:product.taxonomy/keyword :size]}
 
-        {:product.term/name (entities.i18n/get-i18n-entity {:en_US "M"
-                                                            :es_ES "M"})
+        {:product.term/name (entities.i18n/->entity {:en_US "M"
+                                                     :es_ES "M"})
          :product.term/keyword :size-medium
          :product.term/taxonomy [:product.taxonomy/keyword :size]}
 
-        {:product.term/name (entities.i18n/get-i18n-entity {:en_US "L"
-                                                            :es_ES "L"})
+        {:product.term/name (entities.i18n/->entity {:en_US "L"
+                                                     :es_ES "L"})
          :product.term/keyword :size-large
          :product.term/taxonomy [:product.taxonomy/keyword :size]}
 
-        {:product.term/name (entities.i18n/get-i18n-entity {:en_US "XL"
-                                                            :es_ES "XL"})
+        {:product.term/name (entities.i18n/->entity {:en_US "XL"
+                                                     :es_ES "XL"})
          :product.term/keyword :size-x-large
          :product.term/taxonomy [:product.taxonomy/keyword :size]}
 
-        {:product.term/name (entities.i18n/get-i18n-entity {:en_US "XXL"
-                                                            :es_ES "XXL"})
+        {:product.term/name (entities.i18n/->entity {:en_US "XXL"
+                                                     :es_ES "XXL"})
          :product.term/keyword :size-xx-large
          :product.term/taxonomy [:product.taxonomy/keyword :size]}
 
-        {:product.term/name (entities.i18n/get-i18n-entity {:en_US "3XL"
-                                                            :es_ES "3XL"})
+        {:product.term/name (entities.i18n/->entity {:en_US "3XL"
+                                                     :es_ES "3XL"})
          :product.term/keyword :size-3x-large
          :product.term/taxonomy [:product.taxonomy/keyword :size]}]))
 
 (defn brands []
   (map #(assoc % :schema/type :schema.type/brand)
-       [{:brand/name (entities.i18n/get-i18n-entity {:en_US "Test brand"})
+       [{:brand/name (entities.i18n/->entity {:en_US "Test brand"})
          :brand/keyword :test-brand
-         :brand/description (entities.i18n/get-i18n-entity {:en_US "This is the description of the test brand"})
+         :brand/description (entities.i18n/->entity {:en_US "This is the description of the test brand"})
          :brand/logo [:file/keyword :test-brand-logo]}
 
-        {:brand/name (entities.i18n/get-i18n-entity {:en_US "Profitable Brand"})
+        {:brand/name (entities.i18n/->entity {:en_US "Profitable Brand"})
          :brand/keyword :profitable-brand
-         :brand/description (entities.i18n/get-i18n-entity {:en_US "A very profitable brand"})}
+         :brand/description (entities.i18n/->entity {:en_US "A very profitable brand"})}
 
-        {:brand/name (entities.i18n/get-i18n-entity {:en_US "Terrible Brand"})
+        {:brand/name (entities.i18n/->entity {:en_US "Terrible Brand"})
          :brand/keyword :terrible-brand
-         :brand/description (entities.i18n/get-i18n-entity {:en_US "A terrible brand"})}]))
+         :brand/description (entities.i18n/->entity {:en_US "A terrible brand"})}]))
 
 (defn- process-category [[kw i18n & children] & [parent-kw]]
   (let [kw (keyword (str (when parent-kw
                            (str (name parent-kw) "."))
                          (name kw)))]
     (into
-     [(merge {:category/name (entities.i18n/get-i18n-entity i18n)
+     [(merge {:category/name (entities.i18n/->entity i18n)
               :category/keyword kw
               :schema/type :schema.type/category}
              (when parent-kw
@@ -178,19 +183,19 @@
 
 (defn taxes []
   (map #(assoc % :schema/type :schema.type/tax)
-       [{:tax/name (entities.i18n/get-i18n-entity {:en_US "Test tax"})
-         :tax/amount (entities.amount/get-entity 21.0M :eur)
+       [{:tax/name (entities.i18n/->entity {:en_US "Test tax"})
+         :tax/amount (entities.amount/->entity 21.0M :eur)
          :tax/kind :tax.kind/percentage
          :tax/keyword :test-tax}]))
 
 (defn products []
   (map #(assoc % :schema/type :schema.type/product)
-       [{:product/name (entities.i18n/get-i18n-entity {:en_US "Test product"})
+       [{:product/name (entities.i18n/->entity {:en_US "Test product"})
          :product/active true
-         :product/price (entities.amount/get-entity 15.4M :eur)
+         :product/price (entities.amount/->entity 15.4M :eur)
          :product/reference "REF001"
          :product/ean13 "7501031311309"
-         :product/description (entities.i18n/get-i18n-entity {:en_US "This is a test product"})
+         :product/description (entities.i18n/->entity {:en_US "This is a test product"})
          :product/condition :product.condition/new
          :product/brand [:brand/keyword :test-brand]
          :product/tax [:tax/keyword :test-tax]
@@ -203,9 +208,9 @@
                                    [:product.term/keyword :size-small]]
          :product/keyword :test-product}
 
-        {:product/name (entities.i18n/get-i18n-entity {:en_US "Dress one"})
+        {:product/name (entities.i18n/->entity {:en_US "Dress one"})
          :product/active true
-         :product/price (entities.amount/get-entity 10M :eur)
+         :product/price (entities.amount/->entity 10M :eur)
          :product/categories [[:category/keyword :women.dresses]]
          :product/keyword :dress-1
          :product/brand [:brand/keyword :profitable-brand]
@@ -226,9 +231,9 @@
                                                 :file/keyword :dress-1-2
                                                 :file/extension "jpg"}}]}
 
-        {:product/name (entities.i18n/get-i18n-entity {:en_US "Dress two"})
+        {:product/name (entities.i18n/->entity {:en_US "Dress two"})
          :product/active true
-         :product/price (entities.amount/get-entity 10M :eur)
+         :product/price (entities.amount/->entity 10M :eur)
          :product/categories [[:category/keyword :women.dresses]]
          :product/keyword :dress-2
          :product/brand [:brand/keyword :profitable-brand]
@@ -247,9 +252,9 @@
                                                 :file/keyword :dress-2-2
                                                 :file/extension "jpg"}}]}
 
-        {:product/name (entities.i18n/get-i18n-entity {:en_US "Jacket one"})
+        {:product/name (entities.i18n/->entity {:en_US "Jacket one"})
          :product/active true
-         :product/price (entities.amount/get-entity 10M :eur)
+         :product/price (entities.amount/->entity 10M :eur)
          :product/categories [[:category/keyword :men.jackets]]
          :product/keyword :jacket-1
          :product/brand [:brand/keyword :profitable-brand]
@@ -268,9 +273,9 @@
                                                 :file/keyword :jacket-1-2
                                                 :file/extension "jpg"}}]}
 
-        {:product/name (entities.i18n/get-i18n-entity {:en_US "Jacket two"})
+        {:product/name (entities.i18n/->entity {:en_US "Jacket two"})
          :product/active true
-         :product/price (entities.amount/get-entity 10M :eur)
+         :product/price (entities.amount/->entity 10M :eur)
          :product/categories [[:category/keyword :women.jackets]]
          :product/keyword :jacket-2
          :product/brand [:brand/keyword :terrible-brand]
@@ -302,9 +307,9 @@
                                                 :file/keyword :jacket-2-4
                                                 :file/extension "jpg"}}]}
 
-        {:product/name (entities.i18n/get-i18n-entity {:en_US "Jacket three"})
+        {:product/name (entities.i18n/->entity {:en_US "Jacket three"})
          :product/active true
-         :product/price (entities.amount/get-entity 10M :eur)
+         :product/price (entities.amount/->entity 10M :eur)
          :product/categories [[:category/keyword :men.jackets]]
          :product/keyword :jacket-3
          :product/brand [:brand/keyword :terrible-brand]
@@ -322,9 +327,9 @@
                                                 :file/keyword :jacket-3-2
                                                 :file/extension "jpg"}}]}
 
-        {:product/name (entities.i18n/get-i18n-entity {:en_US "Jacket four"})
+        {:product/name (entities.i18n/->entity {:en_US "Jacket four"})
          :product/active true
-         :product/price (entities.amount/get-entity 10M :eur)
+         :product/price (entities.amount/->entity 10M :eur)
          :product/categories [[:category/keyword :women.jackets]]
          :product/keyword :jacket-4
          :product/brand [:brand/keyword :terrible-brand]
@@ -350,9 +355,9 @@
                                                 :file/keyword :jacket-4-4
                                                 :file/extension "jpg"}}]}
 
-        {:product/name (entities.i18n/get-i18n-entity {:en_US "Jacket five"})
+        {:product/name (entities.i18n/->entity {:en_US "Jacket five"})
          :product/active true
-         :product/price (entities.amount/get-entity 10M :eur)
+         :product/price (entities.amount/->entity 10M :eur)
          :product/categories [[:category/keyword :men.jackets]]
          :product/keyword :jacket-5
          :product/brand [:brand/keyword :profitable-brand]
@@ -378,9 +383,9 @@
                                                 :file/keyword :jacket-5-2
                                                 :file/extension "jpg"}}]}
 
-        {:product/name (entities.i18n/get-i18n-entity {:en_US "Jeans one"})
+        {:product/name (entities.i18n/->entity {:en_US "Jeans one"})
          :product/active true
-         :product/price (entities.amount/get-entity 10M :eur)
+         :product/price (entities.amount/->entity 10M :eur)
          :product/categories [[:category/keyword :men.pants]]
          :product/keyword :jeans-1
          :product/terms [[:product.term/keyword :length-long]]
@@ -398,9 +403,9 @@
                                                 :file/keyword :jeans-1-2
                                                 :file/extension "jpg"}}]}
 
-        {:product/name (entities.i18n/get-i18n-entity {:en_US "Shirt one"})
+        {:product/name (entities.i18n/->entity {:en_US "Shirt one"})
          :product/active true
-         :product/price (entities.amount/get-entity 10M :eur)
+         :product/price (entities.amount/->entity 10M :eur)
          :product/categories [[:category/keyword :men.shirts]]
          :product/keyword :shirt-1
          :product/brand [:brand/keyword :profitable-brand]
@@ -425,9 +430,9 @@
                                                 :file/keyword :shirt-1-3
                                                 :file/extension "jpg"}}]}
 
-        {:product/name (entities.i18n/get-i18n-entity {:en_US "Shirt two"})
+        {:product/name (entities.i18n/->entity {:en_US "Shirt two"})
          :product/active true
-         :product/price (entities.amount/get-entity 10M :eur)
+         :product/price (entities.amount/->entity 10M :eur)
          :product/categories [[:category/keyword :women.shirts]]
          :product/keyword :shirt-2
          :product/brand [:brand/keyword :profitable-brand]
@@ -453,9 +458,9 @@
                                                 :file/keyword :shirt-2-3
                                                 :file/extension "jpg"}}]}
 
-        {:product/name (entities.i18n/get-i18n-entity {:en_US "Shirt three"})
+        {:product/name (entities.i18n/->entity {:en_US "Shirt three"})
          :product/active true
-         :product/price (entities.amount/get-entity 10M :eur)
+         :product/price (entities.amount/->entity 10M :eur)
          :product/categories [[:category/keyword :women.shirts]]
          :product/keyword :shirt-3
          :product/terms [[:product.term/keyword :length-short]]
@@ -470,9 +475,9 @@
                                                 :file/keyword :shirt-3-2
                                                 :file/extension "jpg"}}]}
 
-        {:product/name (entities.i18n/get-i18n-entity {:en_US "Shoes one"})
+        {:product/name (entities.i18n/->entity {:en_US "Shoes one"})
          :product/active true
-         :product/price (entities.amount/get-entity 10M :eur)
+         :product/price (entities.amount/->entity 10M :eur)
          :product/categories [[:category/keyword :men.shoes]]
          :product/keyword :shoes-1
          :product/terms [[:product.term/keyword :lace-type-regular]]
@@ -496,9 +501,9 @@
                                                 :file/keyword :shoes-1-3
                                                 :file/extension "jpg"}}]}
 
-        {:product/name (entities.i18n/get-i18n-entity {:en_US "Shoes two"})
+        {:product/name (entities.i18n/->entity {:en_US "Shoes two"})
          :product/active true
-         :product/price (entities.amount/get-entity 10M :eur)
+         :product/price (entities.amount/->entity 10M :eur)
          :product/categories [[:category/keyword :women.shoes]]
          :product/keyword :shoes-2
          :product/brand [:brand/keyword :terrible-brand]
@@ -533,9 +538,9 @@
                                                 :file/keyword :shoes-2-5
                                                 :file/extension "jpg"}}]}
 
-        {:product/name (entities.i18n/get-i18n-entity {:en_US "Sweater one"})
+        {:product/name (entities.i18n/->entity {:en_US "Sweater one"})
          :product/active true
-         :product/price (entities.amount/get-entity 10M :eur)
+         :product/price (entities.amount/->entity 10M :eur)
          :product/categories [[:category/keyword :men.sweaters]]
          :product/keyword :sweater-1
          :product/terms [[:product.term/keyword :length-long]]
@@ -562,9 +567,9 @@
                                                 :file/keyword :sweater-1-4
                                                 :file/extension "jpg"}}]}
 
-        {:product/name (entities.i18n/get-i18n-entity {:en_US "Sweater two"})
+        {:product/name (entities.i18n/->entity {:en_US "Sweater two"})
          :product/active true
-         :product/price (entities.amount/get-entity 10M :eur)
+         :product/price (entities.amount/->entity 10M :eur)
          :product/categories [[:category/keyword :women.sweaters]]
          :product/keyword :sweater-2
          :product/terms [[:product.term/keyword :length-long]]
@@ -586,9 +591,9 @@
                                                 :file/keyword :jacket-3-1
                                                 :file/extension "jpg"}}]}
 
-        {:product/name (entities.i18n/get-i18n-entity {:en_US "Sweater three"})
+        {:product/name (entities.i18n/->entity {:en_US "Sweater three"})
          :product/active true
-         :product/price (entities.amount/get-entity 10M :eur)
+         :product/price (entities.amount/->entity 10M :eur)
          :product/categories [[:category/keyword :men.sweaters]]
          :product/keyword :sweater-3
          :product/terms [[:product.term/keyword :length-long]]
@@ -611,8 +616,8 @@
          :product.variation/terms [[:product.term/keyword :color-dark-green]
                                    [:product.term/keyword :size-large]]
          :product.variation/default? true
-         :product/price (entities.amount/get-entity 19M :eur)
-         :product/name (entities.i18n/get-i18n-entity
+         :product/price (entities.amount/->entity 19M :eur)
+         :product/name (entities.i18n/->entity
                         {:en_US "Test product (dark green and large variation)"})}]))
 
 (defn users []
@@ -649,19 +654,19 @@
 (defn country-groups []
   (map #(assoc % :schema/type :schema.type/country.group)
        [{:country.group/keyword :test-country-group
-         :country.group/name (entities.i18n/get-i18n-entity {:en_US "Test country group"})}]))
+         :country.group/name (entities.i18n/->entity {:en_US "Test country group"})}]))
 
 (defn countries []
   (map #(assoc % :schema/type :schema.type/country)
        [{:country/keyword :test
          :country/group [:country.group/keyword :test-country-group]
-         :country/name (entities.i18n/get-i18n-entity {:en_US "Test country"})}]))
+         :country/name (entities.i18n/->entity {:en_US "Test country"})}]))
 
 (defn states []
   (map #(assoc % :schema/type :schema.type/state)
        [{:state/keyword :test
          :state/country [:country/keyword :test]
-         :state/name (entities.i18n/get-i18n-entity {:en_US "Test state"})}]))
+         :state/name (entities.i18n/->entity {:en_US "Test state"})}]))
 
 (defn addresses []
   (map #(assoc % :schema/type :schema.type/address)
@@ -678,7 +683,7 @@
 
 (defn discounts []
   (map #(assoc % :schema/type :schema.type/discount)
-       [{:discount/name (entities.i18n/get-i18n-entity {:en_US "Test discount"})
+       [{:discount/name (entities.i18n/->entity {:en_US "Test discount"})
          :discount/code "TEST"
          :discount/active? true
          :discount/max-uses-per-customer 2
@@ -686,18 +691,18 @@
          :discount/free-shipping? true
          :discount/amount.tax-included? false
          :discount/amount.kind :discount.amount.kind/percentage
-         :discount/amount (entities.amount/get-entity 15M :eur)}]))
+         :discount/amount (entities.amount/->entity 15M :eur)}]))
 
 (defn shipping-methods []
   (map #(assoc % :schema/type :schema.type/shipping-method)
-       [{:shipping-method/name (entities.i18n/get-i18n-entity {:en_US "Default"
-                                                               :es_ES "Predeterminado"})
+       [{:shipping-method/name (entities.i18n/->entity {:en_US "Default"
+                                                        :es_ES "Predeterminado"})
          :shipping-method/default? true
-         :shipping-method/manipulation-fee (entities.amount/get-entity 2M :eur)
+         :shipping-method/manipulation-fee (entities.amount/->entity 2M :eur)
          :shipping-method/pricing :shipping-method.pricing/price
          :shipping-method/prices [{:schema/type :schema.type/shipping-method.price
                                    :shipping-method.price/country-groups #{[:country.group/keyword :test-country-group]}
-                                   :shipping-method.price/amount (entities.amount/get-entity 5M :eur)
+                                   :shipping-method.price/amount (entities.amount/->entity 5M :eur)
                                    :shipping-method.price/min-value 0M}]}]))
 
 (defn demo-data []
@@ -716,3 +721,28 @@
    (states)
    (addresses)
    (shipping-methods)))
+
+(schema/register-migration!
+ ::demo
+ [{:db/ident :ventas-clothing-theme/demo-data?
+   :db/cardinality :db.cardinality/one
+   :db/valueType :db.type/boolean}
+  {:db/ident :ventas-clothing-theme/demo-data-installed?
+   :db/cardinality :db.cardinality/one
+   :db/valueType :db.type/boolean}])
+
+(defn- existing-import-id []
+  (ffirst (db/q '{:find [?id]
+                  :in [$]
+                  :where [[?id :ventas-clothing-theme/demo-data-installed? true]]})))
+
+(defn install-demo-data! []
+  (schema/migrate-one! ::demo)
+  (let [import-id (existing-import-id)]
+    (if import-id
+      (log/info "An import already exists. Aborting. Import ID:" import-id)
+      (do
+        (doseq [entity (demo-data)]
+          (entity/seed* (assoc entity :ventas-clothing-theme/demo-data? true)))
+        (db/transact [{:db/id (d/tempid :db.part/tx)
+                       :ventas-clothing-theme/demo-data-installed? true}])))))
