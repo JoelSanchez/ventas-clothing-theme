@@ -1,13 +1,11 @@
 (ns ventas.themes.clothing.pages.frontend.profile.orders
   (:require
    [re-frame.core :as rf]
-   [ventas.events :as events]
    [ventas.events.backend :as backend]
    [ventas.i18n :refer [i18n]]
    [ventas.routes :as routes]
    [ventas.session :as session]
    [ventas.themes.clothing.pages.frontend.profile.skeleton :as profile.skeleton]
-   [clojure.string :as str]
    [ventas.utils.formatting :as utils.formatting]
    [ventas.components.base :as base]
    [ventas.components.image :as image]
@@ -19,7 +17,7 @@
 (defn content []
   [:div.orders-page
    (doall
-    (for [{:keys [amount lines created-at]} @(rf/subscribe [::events/db [state-key :orders]])]
+    (for [{:keys [amount lines created-at]} @(rf/subscribe [:db [state-key :orders]])]
       [base/segment
        [:div.orders-page__order
         [:div.orders-page__order-top

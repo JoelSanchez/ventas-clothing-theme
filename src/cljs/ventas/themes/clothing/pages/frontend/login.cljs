@@ -14,7 +14,7 @@
 (def state-key ::state)
 
 (defn- login []
-  (let [{:keys [form]} @(rf/subscribe [::events/db [state-key :login]])]
+  (let [{:keys [form]} @(rf/subscribe [:db [state-key :login]])]
     [base/segment {:class "login-page__segment"}
      [:h3 (i18n ::login)]
      [base/form
@@ -34,7 +34,7 @@
        (i18n ::login)]]]))
 
 (defn- register []
-  (let [{:keys [form]} @(rf/subscribe [::events/db [state-key :register]])]
+  (let [{:keys [form]} @(rf/subscribe [:db [state-key :register]])]
     [base/segment {:class "login-page__segment"}
      [:h3 (i18n ::register)]
      [base/form

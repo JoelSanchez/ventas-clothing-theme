@@ -6,7 +6,6 @@
    [ventas.components.cart :as cart]
    [ventas.components.form :as form]
    [ventas.components.payment :as payment]
-   [ventas.events :as events]
    [ventas.events.backend :as backend]
    [ventas.i18n :refer [i18n]]
    [ventas.routes :as routes]
@@ -104,11 +103,11 @@
                  :attached "top"}
     (i18n ::shipping-address)]
    [base/segment {:attached true}
-    (let [shipping-address @(rf/subscribe [::events/db [state-key :shipping-address]])]
+    (let [shipping-address @(rf/subscribe [:db [state-key :shipping-address]])]
       [:div.checkout-page__address-inner
        [base/form
         (doall
-         (for [{:keys [id] :as address} @(rf/subscribe [::events/db [state-key :addresses]])]
+         (for [{:keys [id] :as address} @(rf/subscribe [:db [state-key :addresses]])]
            [base/segment
             [base/form-radio {:value id
                               :checked (= shipping-address id)
@@ -128,8 +127,8 @@
                  :attached "top"}
     (i18n ::shipping-method)]
    [base/segment {:attached true}
-    (let [selected @(rf/subscribe [::events/db [state-key :shipping-method]])
-          methods @(rf/subscribe [::events/db [state-key :shipping-methods]])]
+    (let [selected @(rf/subscribe [:db [state-key :shipping-method]])
+          methods @(rf/subscribe [:db [state-key :shipping-methods]])]
       (doall
        (for [{:keys [id name price]} methods]
          [:div.shipping-method
@@ -147,8 +146,8 @@
                  :attached "top"}
     (i18n ::payment-method)]
    [base/segment {:attached true}
-    (let [selected @(rf/subscribe [::events/db [state-key :payment-method]])
-          methods @(rf/subscribe [::events/db [state-key :payment-methods]])
+    (let [selected @(rf/subscribe [:db [state-key :payment-method]])
+          methods @(rf/subscribe [:db [state-key :payment-methods]])
           payment-methods (payment/get-methods)]
       [base/accordion {:fluid true
                        :styled true}
@@ -195,14 +194,14 @@
                      :size "large"
                      :fluid true
                      :disabled (not @(rf/subscribe [::valid?]))
-                     :loading @(rf/subscribe [::events/db [state-key :loading]])
+                     :loading @(rf/subscribe [:db [state-key :loading]])
                      :on-click #(rf/dispatch [::order])}
         (i18n ::order)]]]]]])
 
 (rf/reg-event-fx
  ::init.addresses.next
  (fn [_ [_ data]]
-   {:dispatch-n [[::events/db [state-key :addresses] data]
+   {:dispatch-n [[:db [state-key :addresses] data]
                  [::set-shipping-address (-> data first :id)]]}))
 
 (rf/reg-event-fx
@@ -220,7 +219,7 @@
 (rf/reg-event-fx
  ::init.shipping-methods.next
  (fn [_ [_ methods]]
-   {:dispatch-n [[::events/db [state-key :shipping-methods] methods]
+   {:dispatch-n [[:db [state-key :shipping-methods] methods]
                  [::set-shipping-method (-> methods first :id)]]}))
 
 (rf/reg-event-fx
@@ -230,7 +229,7 @@
                      (map (fn [[id _]]
                             (when-let [init-fx (-> (payment/get-methods) id :init-fx)]
                               init-fx)))
-                     (into [[::events/db [state-key :payment-methods] methods]
+                     (into [[:db [state-key :payment-methods] methods]
                             [::set-payment-method (-> methods first key)]]))}))
 
 (routes/define-route!

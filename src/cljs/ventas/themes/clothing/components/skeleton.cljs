@@ -6,7 +6,6 @@
    [ventas.components.notificator :as notificator]
    [ventas.components.popup :as popup]
    [ventas.i18n :refer [i18n]]
-   [ventas.events :as events]
    [ventas.routes :as routes]
    [ventas.themes.clothing.components.footer :as footer]
    [ventas.themes.clothing.components.header :as header]
@@ -41,7 +40,7 @@
 (defn skeleton [contents]
   [:div.root
    [:style
-    (let [{:customization/keys [foreground-color background-color]} @(rf/subscribe [::events/db [:configuration]])]
+    (let [{:customization/keys [foreground-color background-color]} @(rf/subscribe [:db [:configuration]])]
       (-> css-template
           (str/replace "{{foreground-color}}" foreground-color)
           (str/replace "{{background-color}}" background-color)))]
@@ -54,7 +53,7 @@
     [menu/menu]
     (when-not (= (routes/handler) :frontend)
       [:div
-       (let [{:customization/keys [header-image]} @(rf/subscribe [::events/db [:configuration]])]
+       (let [{:customization/keys [header-image]} @(rf/subscribe [:db [:configuration]])]
          [:div.breadcrumbs-wrapper
           (when header-image
             {:style {:backgroundImage (str "url(" (image/get-url header-image) ")")}

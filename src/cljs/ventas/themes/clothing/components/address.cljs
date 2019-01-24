@@ -4,7 +4,6 @@
    [ventas.common.utils :as common.utils]
    [ventas.components.base :as base]
    [ventas.components.form :as form]
-   [ventas.events :as events]
    [ventas.events.backend :as backend]
    [ventas.i18n :refer [i18n]]
    [ventas.utils :as utils :include-macros true]
@@ -95,12 +94,12 @@
                 :width 6
                 :type :combobox
                 :on-change-fx [::fetch-states db-path]
-                :options @(rf/subscribe [::events/db (conj db-path :countries)])}]
+                :options @(rf/subscribe [:db (conj db-path :countries)])}]
 
         [field {:key ::state
                 :type :combobox
                 :width 6
-                :options @(rf/subscribe [::events/db (conj db-path :states)])}]
+                :options @(rf/subscribe [:db (conj db-path :states)])}]
 
         [field {:key ::zip
                 :width 6}]]

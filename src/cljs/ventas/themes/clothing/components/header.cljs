@@ -59,7 +59,7 @@
              (routes/go-to :frontend.search :search search-query))))}]]
 
     [:div.skeleton-header__logo
-     (let [{:customization/keys [logo] :as config} @(rf/subscribe [::events/db [:configuration]])]
+     (let [{:customization/keys [logo] :as config} @(rf/subscribe [:db [:configuration]])]
        [:a {:title (:customization/name config)
             :href (-> js/window (.-location) (.-origin))}
         [:img {:src (if logo

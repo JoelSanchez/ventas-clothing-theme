@@ -30,16 +30,16 @@
 
 (defn- images-view []
   (let [state-path [state-key :slider]
-        {:keys [slides visible-slides]} @(rf/subscribe [::events/db state-path])]
+        {:keys [slides visible-slides]} @(rf/subscribe [:db state-path])]
     [:div.product-page__images
      (when (<= visible-slides (count slides))
        [:div.product-page__up
         [base/icon {:name "chevron up"
                     :on-click #(rf/dispatch [::components.slider/previous state-path])}]])
      [:div.product-page__images-wrapper
-      ^{:key @(rf/subscribe [::events/db (conj state-path :render-index)])}
+      ^{:key @(rf/subscribe [:db (conj state-path :render-index)])}
       [:div.product-page__images-inner {:style {:top @(rf/subscribe [::components.slider/offset state-path])}}
-       (let [current-image @(rf/subscribe [::events/db [state-key :main-image]])]
+       (let [current-image @(rf/subscribe [:db [state-key :main-image]])]
          (map-indexed
           (fn [idx image]
             [:div.product-page__image
@@ -58,19 +58,19 @@
 
 (defn- mobile-images-view []
   (let [state-path [state-key :mobile-slider]
-        {:keys [slides visible-slides]} @(rf/subscribe [::events/db state-path])]
+        {:keys [slides visible-slides]} @(rf/subscribe [:db state-path])]
     [:div.product-page__mobile-images
      (when (<= visible-slides (count slides))
        [:div.product-page__left
         [base/icon {:name "chevron left"
                     :on-click #(rf/dispatch [::components.slider/previous state-path])}]])
      [:div.product-page__images-wrapper
-      ^{:key @(rf/subscribe [::events/db (conj state-path :render-index)])}
+      ^{:key @(rf/subscribe [:db (conj state-path :render-index)])}
       [:div.product-page__images-inner
-       (let [component-width (- @(rf/subscribe [::events/db [:window :width]]) 64)
+       (let [component-width (- @(rf/subscribe [:db [:window :width]]) 64)
              centered-offset (- (/ component-width 2) (/ 360 2) 48)]
          {:style {:left (+ centered-offset @(rf/subscribe [::components.slider/offset state-path]))}})
-       (let [current-image @(rf/subscribe [::events/db [state-key :main-image]])]
+       (let [current-image @(rf/subscribe [:db [state-key :main-image]])]
          (map-indexed
           (fn [idx image]
             [:div.product-page__image
@@ -90,7 +90,7 @@
                     :on-click #(rf/dispatch [::components.slider/next state-path])}]])]))
 
 (defn- main-image-view []
-  (let [image @(rf/subscribe [::events/db [state-key :main-image]])]
+  (let [image @(rf/subscribe [:db [state-key :main-image]])]
     [:div.product-page__main-image
      [zoomable-image/main-view (:id image) :product-page-main :product-page-main-zoom]
      (when-not @(rf/subscribe [::zoomable-image/loaded? (:id image)])
@@ -219,7 +219,7 @@
              [term-view taxonomy term (= term selected)])]]))]
 
      [:div.product-page__actions
-      (let [favorites (set @(rf/subscribe [::events/db :users.favorites]))]
+      (let [favorites (set @(rf/subscribe [:db [:users.favorites]]))]
         [:button.product-page__heart
          {:type "button"
           :class (when (contains? favorites (:id product))
@@ -241,7 +241,7 @@
        [:p details]]]]))
 
 (defn content []
-  (let [state @(rf/subscribe [::events/db state-key])]
+  (let [state @(rf/subscribe [:db [state-key]])]
     [:div.product-page
      [mobile-images-view]
      [base/container

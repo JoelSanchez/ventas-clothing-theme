@@ -5,7 +5,6 @@
    [ventas.components.base :as base]
    [ventas.components.form :as form]
    [ventas.components.notificator :as notificator]
-   [ventas.events :as events]
    [ventas.events.backend :as backend]
    [ventas.i18n :refer [i18n]]
    [ventas.routes :as routes]
@@ -46,7 +45,7 @@
    (let [data (form/get-data db [state-key])]
      {:dispatch-n [[::notificator/notify-saved]
                    [::set-editing? false]
-                   [::events/db.update [state-key :addresses]
+                   [:db.update [state-key :addresses]
                     (if (:id data)
                       #(map (fn [address]
                               (if (= (:id address) (:id new-addr))
@@ -86,7 +85,7 @@
 (rf/reg-event-fx
  ::remove.next
  (fn [_ [_ eid]]
-   {:dispatch-n [[::events/db.update [state-key :addresses]
+   {:dispatch-n [[:db.update [state-key :addresses]
                   (fn [addresses]
                     (->> addresses
                          (remove #(= (:id %) eid))))]
@@ -151,12 +150,12 @@
                  :width 6
                  :type :combobox
                  :on-change-fx [::fetch-states]
-                 :options @(rf/subscribe [::events/db [state-key :countries]])}]
+                 :options @(rf/subscribe [:db [state-key :countries]])}]
 
          [field {:key ::state
                  :type :combobox
                  :width 6
-                 :options @(rf/subscribe [::events/db [state-key :states]])}]
+                 :options @(rf/subscribe [:db [state-key :states]])}]
 
          [field {:key ::zip
                  :width 6}]]
@@ -211,14 +210,14 @@
   [:div
    [base/header {:as "h3"}
     (i18n ::my-addresses)]
-   (when-let [addresses @(rf/subscribe [::events/db [state-key :addresses]])]
+   (when-let [addresses @(rf/subscribe [:db [state-key :addresses]])]
      [base/grid {:columns 3 :class "smaller-padding"}
       [base/grid-row
        (for [address addresses]
          [base/grid-column
           [address-view address]])]])
 
-   (if @(rf/subscribe [::events/db [state-key :editing?]])
+   (if @(rf/subscribe [:db [state-key :editing?]])
      [address-form]
      (let [identity @(rf/subscribe [::session/identity])]
        [base/button {:basic true
@@ -235,7 +234,7 @@
  (fn [_ _]
    {:dispatch-n [[::session/require-identity]
                  [::backend/users.addresses
-                  {:success [::events/db [state-key :addresses]]}]]}))
+                  {:success [:db [state-key :addresses]]}]]}))
 
 (routes/define-route!
   :frontend.profile.addresses

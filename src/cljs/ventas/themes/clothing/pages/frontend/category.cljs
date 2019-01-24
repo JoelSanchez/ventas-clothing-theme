@@ -78,7 +78,7 @@
     :dispatch [::fetch true]}))
 
 (defn- find-category [slug]
-  (->> @(rf/subscribe [::events/db :categories])
+  (->> @(rf/subscribe [:db [:categories]])
        (filter (fn [category]
                  (or (= slug (:id category))
                      (= slug (:slug category)))))
@@ -111,7 +111,7 @@
                                                     :sorting)])})]])
 
 (defn content []
-  (let [{:keys [filters taxonomies items can-load-more?]} @(rf/subscribe [::events/db [state-key]])]
+  (let [{:keys [filters taxonomies items can-load-more?]} @(rf/subscribe [:db [state-key]])]
     [base/container {:class "category-page"}
      [:div.category-page__sidebar
       [components.product-filters/product-filters
