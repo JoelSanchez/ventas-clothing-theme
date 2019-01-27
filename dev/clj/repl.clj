@@ -15,7 +15,6 @@
 (def tn-refresh       tn/refresh)
 
 (defn init []
-  (require 'ventas.themes.clothing.core)
-  (set-themes! #{:clothing})
-  (devtools.repl/init))
+  (devtools.repl/init)
+  (set-themes! #{:clothing :admin}))
 

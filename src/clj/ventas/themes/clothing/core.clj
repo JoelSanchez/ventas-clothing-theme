@@ -58,9 +58,9 @@
 
 (theme/register!
  :clothing
- {:name "Clothing"
-  :init-script "ventas.themes.clothing.core.start();"
+ {:init-script "ventas.themes.clothing.core.start();"
   :build {:modules {:main {:entries ['ventas.themes.clothing.core]}}}
+  :default? true
   :fixtures
   (fn []
     (utils/into-n

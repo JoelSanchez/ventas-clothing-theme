@@ -18,3 +18,4 @@ node_modules
 /resources/public/files/js/compiled/**
 /resources/public/files/css
 /resources/config.edn
+/storage

@@ -174,9 +174,7 @@
 
 (defn files []
   (map #(assoc % :schema/type :schema.type/file)
-       [{:file/keyword :logo
-         :file/extension "png"}
-        {:file/keyword :test-product-image
+       [{:file/keyword :test-product-image
          :file/extension "png"}
         {:file/keyword :test-brand-logo
          :file/extension "png"}]))
@@ -654,7 +652,18 @@
 (defn country-groups []
   (map #(assoc % :schema/type :schema.type/country.group)
        [{:country.group/keyword :test-country-group
-         :country.group/name (entities.i18n/->entity {:en_US "Test country group"})}]))
+         :country.group/name (entities.i18n/->entity {:en_US "Test country group"})}
+        {:country.group/name (entities.i18n/->entity {:en_US "Europe"
+                                                      :es_ES "Europa"})
+         :country.group/keyword :europe}
+
+        {:country.group/name (entities.i18n/->entity {:en_US "North America"
+                                                      :es_ES "Norteamérica"})
+         :country.group/keyword :north-america}
+
+        {:country.group/name (entities.i18n/->entity {:en_US "Europe (non-EU)"
+                                                      :es_ES "Europe (fuera de la UE)"})
+         :country.group/keyword :europe-non-eu}]))
 
 (defn countries []
   (map #(assoc % :schema/type :schema.type/country)
