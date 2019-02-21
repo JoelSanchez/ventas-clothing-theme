@@ -14,7 +14,7 @@
             :url "http://www.eclipse.org/legal/epl-v10.html"}
 
   :dependencies [[org.clojure/clojure "1.9.0" :exclusions [org.clojure/spec.alpha]]
-                 [ventas-core "0.0.12-SNAPSHOT"]
+                 [ventas-core "0.0.12"]
                  [org.apache.commons/commons-compress "1.9"]]
 
   :plugins [[lein-ancient "0.6.15"]
