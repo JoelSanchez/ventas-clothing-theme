@@ -1,9 +1,9 @@
 (defproject ventas-clothing-theme "0.1.0-SNAPSHOT"
   :description "The Clothing ventas theme. Intended for clothing stores."
 
-  :url "https://github.com/joelsanchez/ventas-core"
+  :url "https://github.com/joelsanchez/ventas-clothing-theme"
 
-  :scm {:url "git@github.com:joelsanchez/ventas.git"}
+  :scm {:url "git@github.com:joelsanchez/ventas-clothing-theme.git"}
 
   :pedantic? :abort
 
@@ -13,19 +13,12 @@
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
 
-  :repositories {"my.datomic.com"
-                 ~(merge
-                    {:url "https://my.datomic.com/repo"}
-                    (let [username (System/getenv "DATOMIC__USERNAME")
-                          password (System/getenv "DATOMIC__PASSWORD")]
-                      (when (and username password)
-                        {:username username
-                         :password password})))}
-
   :dependencies [[org.clojure/clojure "1.9.0" :exclusions [org.clojure/spec.alpha]]
-                 [ventas-core "0.0.12-SNAPSHOT"]]
+                 [ventas-core "0.0.12-SNAPSHOT"]
+                 [org.apache.commons/commons-compress "1.9"]]
 
-  :plugins [[lein-ancient "0.6.15"]]
+  :plugins [[lein-ancient "0.6.15"]
+            [deraen/lein-sass4clj "0.3.1" :exclusions [org.apache.commons/commons-compress]]]
 
   :min-lein-version "2.6.1"
 
@@ -37,17 +30,24 @@
              ;; Disable empty/useless menu item in OSX
              "-Dapple.awt.UIElement=true"]
 
+  :sass {:source-paths ["src/scss"]
+         :target-path "resources/public/files/css"
+         :source-map true}
+
   :profiles {:dev {:repl-options {:init-ns repl
                                   :port 4001
                                   :nrepl-middleware [cider.piggieback/wrap-cljs-repl]
                                   :timeout 120000}
-                   :dependencies [[ventas/devtools "0.0.11-SNAPSHOT" :exclusions [ring/ring-core
-                                                                                  ring/ring-codec
-                                                                                  org.clojure/tools.cli
-                                                                                  org.clojure/tools.logging
-                                                                                  org.jboss.logging/jboss-logging]]
+                   :dependencies [[deraen/sass4clj "0.3.1" :exclusions [org.apache.commons/commons-compress]]
+                                  [thheller/shadow-cljs "2.7.21" :exclusions [org.clojure/tools.reader
+                                                                              com.google.guava/guava
+                                                                              org.clojure/tools.cli
+                                                                              commons-codec
+                                                                              commons-io
+                                                                              ring/ring-core]]
                                   [cider/piggieback "0.3.10" :exclusions [org.clojure/clojurescript org.clojure/tools.logging nrepl]]
                                   [binaryage/devtools "0.9.10"]
+                                  [ventas-stripe-plugin "0.1.0-SNAPSHOT"]
                                   [org.clojure/tools.namespace "0.3.0-alpha4"]
                                   [devcards "0.2.4" :exclusions [cljsjs/react cljsjs/react-dom org.clojure/clojurescript]]]
                    :source-paths ["dev/clj" "dev/cljs"]}})

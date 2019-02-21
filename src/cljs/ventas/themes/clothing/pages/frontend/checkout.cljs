@@ -6,7 +6,7 @@
    [ventas.components.cart :as cart]
    [ventas.components.form :as form]
    [ventas.components.payment :as payment]
-   [ventas.events.backend :as backend]
+   [ventas.server.api.user :as api.user]
    [ventas.i18n :refer [i18n]]
    [ventas.routes :as routes]
    [ventas.session :as session]
@@ -58,7 +58,7 @@
                               address
                               (->> (form/get-data db new-address-db-path)
                                    (common.utils/map-keys #(keyword (name %))))))]
-     {:dispatch [::backend/users.cart.order
+     {:dispatch [::api.user/users.cart.order
                  {:params {:payment-params payment-params
                            :email email
                            :shipping-address shipping-address
@@ -208,11 +208,11 @@
  ::init
  (fn [_ _]
    {:dispatch-n [[::cart/get]
-                 [::backend/users.addresses
+                 [::api.user/users.addresses
                   {:success ::init.addresses.next}]
-                 [::backend/users.cart.shipping-methods
+                 [::api.user/users.cart.shipping-methods
                   {:success ::init.shipping-methods.next}]
-                 [::backend/users.cart.payment-methods
+                 [::api.user/users.cart.payment-methods
                   {:success ::init.payment-methods.next}]
                  [::theme.address/init new-address-db-path]]}))
 
@@ -230,7 +230,7 @@
                             (when-let [init-fx (-> (payment/get-methods) id :init-fx)]
                               init-fx)))
                      (into [[:db [state-key :payment-methods] methods]
-                            [::set-payment-method (-> methods first key)]]))}))
+                            [::set-payment-method (some-> methods first key)]]))}))
 
 (routes/define-route!
   :frontend.checkout

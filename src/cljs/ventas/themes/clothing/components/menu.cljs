@@ -10,7 +10,6 @@
 (def state-key ::state)
 
 (defn- category->menu-item [[{:keys [slug name]} children]]
-  (println "slug" slug name)
   {:text name
    :id slug
    :href (routes/path-for :frontend.category :id slug)

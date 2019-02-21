@@ -1,7 +1,7 @@
 (ns ventas.themes.clothing.pages.frontend.profile.orders
   (:require
    [re-frame.core :as rf]
-   [ventas.events.backend :as backend]
+   [ventas.server.api :as backend]
    [ventas.i18n :refer [i18n]]
    [ventas.routes :as routes]
    [ventas.session :as session]

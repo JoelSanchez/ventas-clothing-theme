@@ -4,7 +4,7 @@
    [ventas.common.utils :as common.utils]
    [ventas.components.base :as base]
    [ventas.components.form :as form]
-   [ventas.events.backend :as backend]
+   [ventas.server.api :as backend]
    [ventas.i18n :refer [i18n]]
    [ventas.utils :as utils :include-macros true]
    [ventas.utils.validation :as validation]))

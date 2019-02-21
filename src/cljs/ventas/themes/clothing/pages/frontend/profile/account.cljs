@@ -5,7 +5,7 @@
    [ventas.components.base :as base]
    [ventas.components.form :as form]
    [ventas.components.notificator :as notificator]
-   [ventas.events.backend :as backend]
+   [ventas.server.api :as backend]
    [ventas.i18n :refer [i18n]]
    [ventas.routes :as routes]
    [ventas.session :as session]

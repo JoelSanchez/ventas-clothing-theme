@@ -177,6 +177,8 @@
        [{:file/keyword :test-product-image
          :file/extension "png"}
         {:file/keyword :test-brand-logo
+         :file/extension "png"}
+        {:file/keyword :test-shipping-method-logo
          :file/extension "png"}]))
 
 (defn taxes []
@@ -712,7 +714,15 @@
          :shipping-method/prices [{:schema/type :schema.type/shipping-method.price
                                    :shipping-method.price/country-groups #{[:country.group/keyword :test-country-group]}
                                    :shipping-method.price/amount (entities.amount/->entity 5M :eur)
-                                   :shipping-method.price/min-value 0M}]}]))
+                                   :shipping-method.price/min-value 0M}]
+         :shipping-method/logo [:file/keyword :test-shipping-method-logo]}]))
+
+(defn theme-config []
+  [{:schema/type :schema.type/clothing-theme
+    :clothing-theme/phone-number "666 555 444"
+    :clothing-theme/email "my-store@coldmail.com"
+    :clothing-theme/schedule (entities.i18n/->entity
+                              {:en_US "Monday to Friday, 9am - 5pm"})}])
 
 (defn demo-data []
   (utils/into-n
@@ -729,7 +739,8 @@
    (countries)
    (states)
    (addresses)
-   (shipping-methods)))
+   (shipping-methods)
+   (theme-config)))
 
 (schema/register-migration!
  ::demo

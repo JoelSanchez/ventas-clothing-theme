@@ -2,7 +2,6 @@
   "See the docstring in the server version of this file"
   (:require
    [re-frame.core :as rf]
-   [ventas.components.cookies :as cookies]
    [ventas.core]
    [ventas.events :as events]
    [ventas.i18n :as i18n :refer [i18n]]
@@ -70,8 +69,6 @@
    :ventas.themes.clothing.components.menu/women "Women"
    :ventas.themes.clothing.components.menu/men "Men"
 
-   :ventas.themes.clothing.components.footer/footer-text "This is the example Ventas theme."
-   :ventas.themes.clothing.components.footer/footer-subtext "Here you can add custom text."
    :ventas.themes.clothing.components.footer/links "Links"
    :ventas.themes.clothing.components.footer/privacy-policy "Privacy policy"
    :ventas.themes.clothing.components.footer/contact "Contact information"

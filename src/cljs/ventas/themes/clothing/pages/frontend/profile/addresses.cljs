@@ -5,7 +5,8 @@
    [ventas.components.base :as base]
    [ventas.components.form :as form]
    [ventas.components.notificator :as notificator]
-   [ventas.events.backend :as backend]
+   [ventas.server.api :as backend]
+   [ventas.server.api.user :as api.user]
    [ventas.i18n :refer [i18n]]
    [ventas.routes :as routes]
    [ventas.session :as session]
@@ -34,7 +35,7 @@
 (rf/reg-event-fx
  ::save
  (fn [{:keys [db]} _]
-   {:dispatch [::backend/users.addresses.save
+   {:dispatch [::api.user/users.addresses.save
                {:params (->> (form/get-data db [state-key])
                              (common.utils/map-keys #(keyword (name %))))
                 :success ::save.next}]}))
@@ -78,7 +79,7 @@
 (rf/reg-event-fx
  ::remove
  (fn [_ [_ eid]]
-   {:dispatch [::backend/users.addresses.remove
+   {:dispatch [::api.user/users.addresses.remove
                {:params {:id eid}
                 :success [::remove.next eid]}]}))
 
@@ -233,7 +234,7 @@
  ::init
  (fn [_ _]
    {:dispatch-n [[::session/require-identity]
-                 [::backend/users.addresses
+                 [::api.user/users.addresses
                   {:success [:db [state-key :addresses]]}]]}))
 
 (routes/define-route!

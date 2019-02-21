@@ -24,7 +24,6 @@
 (defn page []
   [theme.skeleton/skeleton
    [:div
-    ;;[plugins.slider/slider slider-kw]
     [base/container
      [category-list/category-list]
      [theme.heading/heading (i18n ::suggestions-of-the-week)]
@@ -36,9 +35,7 @@
  ::init
  (fn [_ _]
    {:dispatch-n [[::featured-entities/init category-list-key :category]
-                 [::featured-entities/init product-list-key :product]
-                 ;  [::plugins.slider/sliders.get slider-kw]
-                 ]}))
+                 [::featured-entities/init product-list-key :product]]}))
 
 (routes/define-route!
   :frontend

@@ -1,9 +1,7 @@
 (ns ventas.themes.clothing.api
-  (:require
-   [re-frame.core :as rf]))
+  (:require [re-frame.core])
+  (:require-macros
+   [ventas.themes.clothing.api]
+   [ventas.server.api.core :refer [define-api-events-for-ns!]]))
 
-(rf/reg-event-fx
- ::featured-entities.list
- (fn [_ [_ options]]
-   {:ws-request (merge {:name ::featured-entities.list}
-                       options)}))
+(define-api-events-for-ns!)

@@ -20,4 +20,10 @@
    {:pre [(#{:category :product} entity-type) key]}
    {:dispatch [::api/featured-entities.list
                {:params {:entity-type entity-type}
-                :success [:db [state-key key]]}]}))
+                :success [::init.next key entity-type]}]}))
+
+(rf/reg-event-db
+ ::init.next
+ (fn [db [_ key entity-type entities]]
+   (assoc-in db [state-key key] {:type entity-type
+                                 :entities entities})))

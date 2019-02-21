@@ -20,6 +20,10 @@ $skeleton-header-logo-width: 60px;
     padding: 10px;
     display: flex;
     align-items: center;
+
+    img {
+        max-height: 75px;
+    }
 }
 
 .skeleton-header__info {

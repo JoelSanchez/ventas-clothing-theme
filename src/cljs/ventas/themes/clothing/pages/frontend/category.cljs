@@ -7,7 +7,7 @@
    [ventas.components.product-filters :as components.product-filters]
    [ventas.components.product-list :as components.product-list]
    [ventas.events :as events]
-   [ventas.events.backend :as backend]
+   [ventas.server.api :as backend]
    [ventas.i18n :refer [i18n]]
    [ventas.routes :as routes]
    [ventas.themes.clothing.components.menu :as menu]

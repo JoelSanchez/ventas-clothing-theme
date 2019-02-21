@@ -1,4 +1,13 @@
 {:source-paths ["dev/cljs" "src/cljs" "src/clj" "test/cljs"]
  :nrepl {:port 4010
          :init-ns repl}
- :dependencies [[ventas-core "0.0.12-SNAPSHOT"]]}
+ :dependencies [[ventas-core "0.0.12-SNAPSHOT"]]
+ :builds {:app {:target :browser
+                :asset-path "files/js/clothing"
+                :output-to "resources/public/files/js/clothing/main.js"
+                :output-dir "resources/public/files/js/clothing"
+                :modules {:main {:entries [ventas.themes.clothing.core]}}
+                :devtools {:after-load ventas.core/on-reload
+                           :watch-dir "resources/public"}
+                :dev {:preloads [devtools.preload]}
+                :release {:pretty-print false}}}}

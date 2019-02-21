@@ -11,6 +11,7 @@
    [ventas.themes.clothing.components.header :as header]
    [ventas.themes.clothing.components.menu :as menu]
    [ventas.themes.clothing.components.preheader :as preheader]
+   [ventas.themes.clothing.api :as clothing.api]
    [re-frame.core :as rf]
    [ventas.components.image :as image]
    [clojure.string :as str]))
@@ -68,4 +69,5 @@
 (rf/reg-event-fx
  ::init
  (fn [_ _]
-   {:dispatch-n [[::cookies/get-state-from-local-storage]]}))
+   {:dispatch-n [[::cookies/get-state-from-local-storage]
+                 [::clothing.api/config {:success [:db [:theme-configuration]]}]]}))

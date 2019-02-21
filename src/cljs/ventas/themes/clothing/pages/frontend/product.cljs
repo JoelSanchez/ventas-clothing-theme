@@ -9,11 +9,12 @@
    [ventas.components.term :as term]
    [ventas.components.zoomable-image :as zoomable-image]
    [ventas.events :as events]
-   [ventas.events.backend :as backend]
+   [ventas.server.api :as backend]
    [ventas.i18n :refer [i18n]]
    [ventas.routes :as routes]
    [ventas.themes.clothing.components.heading :as theme.heading]
    [ventas.themes.clothing.components.skeleton :refer [skeleton]]
+   [ventas.themes.clothing.components.sibling-products :as sibling-products]
    [ventas.utils.formatting :as utils.formatting]))
 
 (def state-key ::state)
@@ -252,12 +253,11 @@
      [:div.product-page__bottom
       [description-view state]]
      (let [id (routes/ref-from-param :id)]
-       (comment (when (seq @(rf/subscribe [:sibling-products/list id]))
-                  [:div.product-page__sibling-products
-                   [base/container
-                    [theme.heading/heading (i18n ::sibling-products)]
-                    [sibling-products/sibling-products id]]]))
-       )]))
+       (when (seq @(rf/subscribe [::sibling-products/list id]))
+         [:div.product-page__sibling-products
+          [base/container
+           [theme.heading/heading (i18n ::sibling-products)]
+           [sibling-products/sibling-products id]]]))]))
 
 (defn page []
   [skeleton
@@ -270,8 +270,7 @@
      {:db (assoc db state-key {:quantity 1})
       :dispatch-n [[::events/users.favorites.enumerate]
                    [::fetch id]
-                   ; [::sibling-products/list id]
-                   ]})))
+                   [::sibling-products/list id]]})))
 
 (routes/define-route!
   :frontend.product
