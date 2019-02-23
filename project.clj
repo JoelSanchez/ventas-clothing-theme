@@ -56,7 +56,6 @@
                                                                               ring/ring-core]]
                                   [cider/piggieback "0.3.10" :exclusions [org.clojure/clojurescript org.clojure/tools.logging nrepl]]
                                   [binaryage/devtools "0.9.10"]
-                                  [ventas-stripe-plugin "0.1.0-SNAPSHOT"]
                                   [org.clojure/tools.namespace "0.3.0-alpha4"]
                                   [devcards "0.2.4" :exclusions [cljsjs/react cljsjs/react-dom org.clojure/clojurescript]]]
                    :source-paths ["dev/clj" "dev/cljs"]}})
