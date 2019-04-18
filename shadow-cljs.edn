@@ -1,7 +1,6 @@
-{:source-paths ["dev/cljs" "src/cljs" "src/clj" "test/cljs"]
+{:lein {:profile "+dev"}
  :nrepl {:port 4010
          :init-ns repl}
- :dependencies [[ventas-core "0.0.12-SNAPSHOT"]]
  :builds {:app {:target :browser
                 :asset-path "files/js/clothing"
                 :output-to "resources/public/files/js/clothing/main.js"
