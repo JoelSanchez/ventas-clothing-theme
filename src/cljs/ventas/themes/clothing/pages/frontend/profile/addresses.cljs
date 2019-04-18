@@ -233,7 +233,7 @@
 (rf/reg-event-fx
  ::init
  (fn [_ _]
-   {:dispatch-n [[::session/require-identity]
+   {:dispatch-n [[::profile.skeleton/require-identity]
                  [::api.user/users.addresses
                   {:success [:db [state-key :addresses]]}]]}))
 

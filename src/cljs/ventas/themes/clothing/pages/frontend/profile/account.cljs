@@ -114,7 +114,7 @@
  ::init
  (fn [_ _]
    (let [identity @(rf/subscribe [::session/identity])]
-     {:dispatch-n [[::session/require-identity]
+     {:dispatch-n [[::profile.skeleton/require-identity]
                    [::form/populate form-config identity]]})))
 
 (routes/define-route!

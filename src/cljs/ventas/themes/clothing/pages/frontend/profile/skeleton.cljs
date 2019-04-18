@@ -6,7 +6,9 @@
    [ventas.events :as events]
    [ventas.i18n :refer [i18n]]
    [ventas.routes :as routes]
-   [ventas.themes.clothing.components.skeleton :as skeleton]))
+   [ventas.components.notificator :as notificator]
+   [ventas.themes.clothing.components.skeleton :as skeleton]
+   [ventas.session :as session]))
 
 (defn sidebar []
   [sidebar/sidebar
@@ -31,3 +33,13 @@
     [sidebar]
     [:div.profile-skeleton__content
      content]]])
+
+(rf/reg-event-fx
+ ::require-identity
+ (fn [{:keys [db]} _]
+   (let [{:keys [status] :as identity} (session/get-identity db)]
+     (when-not (session/identity-valid? identity)
+       (merge {:go-to [:frontend.login]}
+              (when (= :user.status/unregistered status)
+                {:dispatch [::notificator/add {:message (i18n ::session/unregistered-error)
+                                               :theme "error"}]}))))))

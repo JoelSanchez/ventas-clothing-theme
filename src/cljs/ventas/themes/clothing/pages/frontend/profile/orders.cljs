@@ -4,7 +4,6 @@
    [ventas.server.api :as backend]
    [ventas.i18n :refer [i18n]]
    [ventas.routes :as routes]
-   [ventas.session :as session]
    [ventas.themes.clothing.pages.frontend.profile.skeleton :as profile.skeleton]
    [ventas.utils.formatting :as utils.formatting]
    [ventas.components.base :as base]
@@ -51,7 +50,7 @@
 (rf/reg-event-fx
  ::init
  (fn [_ _]
-   {:dispatch-n [[::session/require-identity]
+   {:dispatch-n [[::profile.skeleton/require-identity]
                  [::backend/users.orders.list
                   {:success [::init.orders.success]}]]}))
 
