@@ -1,4 +1,4 @@
-(defproject ventas-clothing-theme "0.1.2-SNAPSHOT"
+(defproject ventas-clothing-theme "0.1.2"
   :description "The Clothing ventas theme. Intended for clothing stores."
 
   :url "https://github.com/joelsanchez/ventas-clothing-theme"
